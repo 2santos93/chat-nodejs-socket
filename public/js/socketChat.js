@@ -1,6 +1,6 @@
 var socket = io();
 
-const params = new URLSearchParams(window.location.search);
+// const params = new URLSearchParams(window.location.search);
 
 if(!params.has("name") ||!params.has("room") ){
     window.location = "index.html";
@@ -22,7 +22,8 @@ socket.on('connect', function(){
         if(usersConnected.err){
             console.log(usersConnected.message);
         }
-        console.log("Users online: ", usersConnected);
+        // console.log("Users online: ", usersConnected);
+        renderUsers(usersConnected);
 
     });
 });
@@ -32,11 +33,14 @@ socket.on('disconnect', () => {
 });
 
 socket.on('createMessage', function(data){
-    console.log(data);
+    // console.log(data);
+    renderMessage(data);
+    scrollBottom();
 });
 
 socket.on("listUsers", function(usersConnected){
     console.log("Users online: ", usersConnected);
+    renderUsers(usersConnected);
 });
 
 socket.on("messagePrivate", function(data){

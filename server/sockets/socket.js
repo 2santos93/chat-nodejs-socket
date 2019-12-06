@@ -19,6 +19,7 @@ io.on('connection', function(client){
         const usersPerRoom = users.getUsersPerRoom(user.room);
 
         client.broadcast.to(user.room).emit("listUsers", usersPerRoom);
+        client.broadcast.to(user.room).emit("createMessage", createMessage("Admin",`${user.name} join`));
 
         callback(usersPerRoom);
 
@@ -33,13 +34,15 @@ io.on('connection', function(client){
 
     });
 
-    client.on("createMessage", (data) => {
+    client.on("createMessage", (data, callback) => {
 
         const user = users.getUser(client.id);
 
         const message = createMessage(user.name, data.message);
 
         client.broadcast.to(user.room).emit("createMessage", message);
+
+        callback(message);
 
     });
 
